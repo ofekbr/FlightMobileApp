@@ -10,7 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name="control.ControlActivity" />
+        <activity
+            android:name="control.ControlActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="connect.ConnectActivity"
             android:label="@string/app_name"

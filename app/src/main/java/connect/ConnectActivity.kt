@@ -78,15 +78,14 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         val URL = binding.URLText.text.toString()
         val intent = Intent(this, ControlActivity::class.java)
         intent.putExtra("EXTRA_TEXT", URL)
-        // TODO update the cache with the current url
-        // TODO GET picture from simulator. navigate only if the GET was successful.
-        val message = Toast.makeText(this,"connection failed", Toast.LENGTH_SHORT)
-        message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
-        message.show();
+        // TODO - update the cache with the current url
+        // TODO - GET picture from simulator. navigate only if the GET was successful.
         if (true) {
             startActivity(intent)
         } else {
-
+            val message = Toast.makeText(this,"connection failed", Toast.LENGTH_SHORT)
+            message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+            message.show();
         }
 
     }
