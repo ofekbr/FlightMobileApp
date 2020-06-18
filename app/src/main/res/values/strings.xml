@@ -10,4 +10,9 @@
     <string name="type_URL">Type URL here…</string>
     <string name="connect">Connect</string>
     <string name="new_text">control activity</string>
+    <string name="local_host1">my local host 1</string>
+    <string name="local_host2">my local host 2</string>
+    <string name="local_host3">my local host 3</string>
+    <string name="local_host4"></string>
+    <string name="local_host5"></string>
 </resources>

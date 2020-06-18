@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,6 +16,7 @@
             android:layout_marginRight="5dp"
             android:onClick="connect"
             android:text="@string/connect"
+            android:enabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,5 +43,66 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
+
+        <Button
+            android:id="@+id/localHost1"
+            android:layout_width="285dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            android:text="@string/local_host1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.092" />
+
+        <Button
+            android:id="@+id/localHost2"
+            android:layout_width="285dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            android:text="@string/local_host2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.186" />
+
+        <Button
+            android:id="@+id/localHost3"
+            android:layout_width="285dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            android:text="@string/local_host3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.282" />
+
+        <Button
+            android:id="@+id/localHost4"
+            android:layout_width="285dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            android:text="@string/local_host4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.381" />
+
+        <Button
+            android:id="@+id/localHost5"
+            android:layout_width="285dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            android:text="@string/local_host5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.472" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
