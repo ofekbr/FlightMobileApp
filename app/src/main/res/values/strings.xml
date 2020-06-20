@@ -7,6 +7,11 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="type_URL">Type URL here…</string>
+    <string name="connect">Connect</string>
+
+    <string name="new_text">control activity</string>
+
+    <string name="rudder">Rudder</string>
+    <string name="throttle">Throttle</string>
 </resources>
