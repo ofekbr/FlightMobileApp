@@ -91,13 +91,22 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         val URL = binding.URLText.text.toString()
 
         //Updating DB
-        db.clearAllTables()
-        if (urlList.size < 5) {
-            urlList.add(Url(0, URL))
-        } else {
-            urlList.last().id = 0
-            urlList.last().url = URL
+        var foundFlag = false
+        for (url in urlList) {
+            if (url.url == URL) {
+                url.id = 0
+                foundFlag = true
+            }
         }
+        if (!foundFlag) {
+            if (urlList.size < 5) {
+                urlList.add(Url(0, URL))
+            } else {
+                urlList.last().id = 0
+                urlList.last().url = URL
+            }
+        }
+        db.clearAllTables()
         db.urlDao.insert(urlList)
 
         
