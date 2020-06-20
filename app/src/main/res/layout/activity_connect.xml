@@ -45,60 +45,60 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <Button
-            android:id="@+id/localHost1"
+            android:id="@+id/button1"
             android:layout_width="285dp"
             android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:layout_marginRight="60dp"
-            android:text="@string/local_host1"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.092" />
 
         <Button
-            android:id="@+id/localHost2"
+            android:id="@+id/button2"
             android:layout_width="285dp"
             android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:layout_marginRight="60dp"
-            android:text="@string/local_host2"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.186" />
 
         <Button
-            android:id="@+id/localHost3"
+            android:id="@+id/button3"
             android:layout_width="285dp"
             android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:layout_marginRight="60dp"
-            android:text="@string/local_host3"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.282" />
 
         <Button
-            android:id="@+id/localHost4"
+            android:id="@+id/button4"
             android:layout_width="285dp"
             android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:layout_marginRight="60dp"
-            android:text="@string/local_host4"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.381" />
 
         <Button
-            android:id="@+id/localHost5"
+            android:id="@+id/button5"
             android:layout_width="285dp"
             android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:layout_marginRight="60dp"
-            android:text="@string/local_host5"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

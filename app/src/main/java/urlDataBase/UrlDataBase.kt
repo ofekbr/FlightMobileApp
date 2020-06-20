@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Url::class], version = 1, exportSchema = false)
 abstract class UrlDataBase : RoomDatabase() {
-    abstract val urlDatabaseDataBase: UrlDatabaseDao
+    abstract val urlDao: UrlDatabaseDao
 
     companion object {
 
@@ -24,6 +24,7 @@ abstract class UrlDataBase : RoomDatabase() {
                         UrlDataBase::class.java,
                         "server_url_database")
                         .fallbackToDestructiveMigration()
+                        .allowMainThreadQueries()
                         .build()
                     INSTANCE = instance
             }
