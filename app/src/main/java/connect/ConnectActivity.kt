@@ -112,7 +112,6 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         
         val intent = Intent(this, ControlActivity::class.java)
         intent.putExtra("EXTRA_TEXT", URL)
-        // TODO - update the cache with the current url
         // TODO - GET picture from simulator. navigate only if the GET was successful.
         if (true) {
             startActivity(intent)
