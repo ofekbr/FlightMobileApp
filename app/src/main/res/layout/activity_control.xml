@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="control.ControlActivity">
 
+    <ImageView
+        android:id="@+id/screen_shot"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/textThrottle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.546"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.441" />
+
     <io.github.controlwear.virtual.joystick.android.JoystickView
         android:id="@+id/joystickView"
         android:layout_width="225dp"
@@ -22,19 +33,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.424"
         app:layout_constraintVertical_bias="0.864" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="190dp"
-        android:layout_height="42dp"
-        android:text="@string/new_text"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
         android:id="@+id/rudderSlider"
