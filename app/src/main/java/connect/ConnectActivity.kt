@@ -15,6 +15,10 @@ import androidx.databinding.DataBindingUtil
 import control.ControlActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityConnectBinding
+import com.google.gson.GsonBuilder
+import okhttp3.ResponseBody
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 import urlDataBase.Url
 import urlDataBase.UrlDataBase
 
@@ -112,15 +116,30 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         
         val intent = Intent(this, ControlActivity::class.java)
         intent.putExtra("EXTRA_TEXT", URL)
-        // TODO - GET picture from simulator. navigate only if the GET was successful.
-        if (true) {
-            startActivity(intent)
-        } else {
-            val message = Toast.makeText(this,"connection failed", Toast.LENGTH_SHORT)
-            message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
-            message.show()
-        }
 
+        //Sending http request to test the server url
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(URL)
+            .build()
+        val api = retrofit.create(Api::class.java)
+
+        val body = api.getImg().enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>) {
+                startActivity(intent)
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val message = Toast.makeText(applicationContext, "connection failed", Toast.LENGTH_SHORT)
+                message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+                message.show()
+            }
+        })
     }
 
     override fun onClick(b: View) {
