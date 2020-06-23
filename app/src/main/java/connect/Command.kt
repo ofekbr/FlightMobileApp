@@ -1,4 +1,4 @@
-package control
+package connect
 
 data class Command(
     val aileron: Double,

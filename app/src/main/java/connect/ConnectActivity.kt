@@ -123,29 +123,24 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
             message.show()
             return
         }
-        
+
         val intent = Intent(this, ControlActivity::class.java)
         intent.putExtra("EXTRA_TEXT", URL)
 
         //Sending http request to test the server url
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(URL)
-            .build()
+        val gson = GsonBuilder().setLenient().create()
+        val retrofit = Retrofit.Builder().baseUrl(URL).addConverterFactory(GsonConverterFactory.create(gson)).build()
         val api = retrofit.create(Api::class.java)
 
-        val body = api.getImg().enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                startActivity(intent)
-            }
-
+        api.sendCom(Command(0.0,0.0,0.0,0.0)).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
                 message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
                 message.show()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                startActivity(intent)
             }
         })
     }
