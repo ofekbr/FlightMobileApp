@@ -1,6 +1,5 @@
 package connect
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -10,17 +9,22 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import control.ControlActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityConnectBinding
 import com.google.gson.GsonBuilder
+import control.ControlActivity
 import okhttp3.ResponseBody
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import urlDataBase.Url
 import urlDataBase.UrlDataBase
+
 
 class ConnectActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityConnectBinding
@@ -113,31 +117,30 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         db.clearAllTables()
         db.urlDao.insert(urlList)
 
-        
+        if (!URL.startsWith("http") && !URL.startsWith("HTTP")) {
+            val message = Toast.makeText(applicationContext, "bad URL", Toast.LENGTH_SHORT)
+            message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+            message.show()
+            return
+        }
+
         val intent = Intent(this, ControlActivity::class.java)
         intent.putExtra("EXTRA_TEXT", URL)
 
         //Sending http request to test the server url
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(URL)
-            .build()
+        val gson = GsonBuilder().setLenient().create()
+        val retrofit = Retrofit.Builder().baseUrl(URL).addConverterFactory(GsonConverterFactory.create(gson)).build()
         val api = retrofit.create(Api::class.java)
 
-        val body = api.getImg().enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(
-                call: Call<ResponseBody>,
-                response: Response<ResponseBody>) {
-                startActivity(intent)
-            }
-
+        api.sendCom(Command(0.0,0.0,0.0,0.0)).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                val message = Toast.makeText(applicationContext, "connection failed", Toast.LENGTH_SHORT)
+                val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
                 message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
                 message.show()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                startActivity(intent)
             }
         })
     }
