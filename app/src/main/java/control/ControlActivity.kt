@@ -20,6 +20,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.sql.Time
+import java.util.*
+import kotlin.concurrent.schedule
 
 class ControlActivity : AppCompatActivity() {
     private lateinit var url: String
@@ -28,8 +31,6 @@ class ControlActivity : AppCompatActivity() {
         setContentView(R.layout.activity_control)
 
         url = intent.getStringExtra("EXTRA_TEXT")
-        //val textView = findViewById<TextView>(R.id.textView)
-        //textView.text = URL
         setThrottleSlider()
         setRudderSlider()
         setJoystick()
@@ -44,19 +45,24 @@ class ControlActivity : AppCompatActivity() {
     }
 
     fun myGetImgFun(view: View) {
+        val timer: Timer = Timer("getImg", false)
+        timer.schedule(0, 300) {
+            loop()
+        }
+    }
+
+    private fun loop(){
         val gson = GsonBuilder()
             .setLenient()
             .create()
         val retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         val api = retrofit.create(Api::class.java)
 
-        val body = api.getImg().enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(
-                call: Call<ResponseBody>,
-                response: Response<ResponseBody>
+        api.getImg().enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>
             ) {
                 val I = response.body()?.byteStream()
                 val B = BitmapFactory.decodeStream(I)
@@ -69,6 +75,8 @@ class ControlActivity : AppCompatActivity() {
                 val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
                 message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
                 message.show()
+                //TODO flag for error messages
+                //TODO go back to reconnect
             }
         })
     }
@@ -103,6 +111,4 @@ class ControlActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
     }
-
-    fun getImgFun(view: View) {}
 }
