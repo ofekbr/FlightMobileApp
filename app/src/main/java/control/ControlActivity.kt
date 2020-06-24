@@ -3,16 +3,13 @@ package control
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.Gravity
-import android.view.View
-import android.widget.Button
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
 import com.example.myapplication.R
 import com.google.gson.GsonBuilder
 import connect.Api
+import connect.Command
 import kotlinx.android.synthetic.main.activity_control.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -20,12 +17,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.sql.Time
+import kotlin.math.abs
 import java.util.*
 import kotlin.concurrent.schedule
 
 class ControlActivity : AppCompatActivity() {
     private lateinit var url: String
+    private var aileron : Double = 0.0
+    private var elevator : Double = 0.0
+    private var rudder : Double = 0.0
+    private var throttle : Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
@@ -34,20 +35,41 @@ class ControlActivity : AppCompatActivity() {
         setThrottleSlider()
         setRudderSlider()
         setJoystick()
+
+        val timer = Timer("getImg", false)
+        timer.schedule(0, 300) {
+            loop()
+        }
+    }
+
+    private fun postJson() {
+        val gson = GsonBuilder().setLenient().create()
+        val retrofit = Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(gson)).build()
+        val api = retrofit.create(Api::class.java)
+
+        api.sendCom(Command(aileron,rudder,elevator,throttle)).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
+                message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+                message.show()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            }
+        })
     }
 
     private fun setJoystick() {
         joystickView.setOnMoveListener { angle, strength ->
-            val aileron = kotlin.math.cos(Math.toRadians(angle.toDouble())) * strength / 100
-            val elevator = kotlin.math.sin(Math.toRadians(angle.toDouble())) * strength / 100
-            // TODO send to server - check if the change was 1%
-        }
-    }
-
-    fun myGetImgFun(view: View) {
-        val timer: Timer = Timer("getImg", false)
-        timer.schedule(0, 300) {
-            loop()
+            val prevAileron = aileron
+            val prevElevator = elevator
+            aileron = kotlin.math.cos(Math.toRadians(angle.toDouble())) * strength / 100
+            elevator = kotlin.math.sin(Math.toRadians(angle.toDouble())) * strength / 100
+            val absAileron = abs(prevAileron - aileron)
+            val absElevator = abs(prevElevator - elevator)
+            if (absAileron >= 0.02 || absElevator >= 0.02) {
+                postJson()
+            }
         }
     }
 
@@ -90,7 +112,8 @@ class ControlActivity : AppCompatActivity() {
                  fromUser: Boolean
              ) {
                  throttleVal.text = (progress.toFloat() / 100 ).toString()
-                 // TODO send value to server
+                 throttle = progress.toDouble() / 100
+                 postJson()
              }
              override fun onStartTrackingTouch(seekBar: SeekBar) {}
              override fun onStopTrackingTouch(seekBar: SeekBar) {}
@@ -105,7 +128,8 @@ class ControlActivity : AppCompatActivity() {
                 fromUser: Boolean
             ) {
                 rudderVal.text = ((progress.toFloat() - 50) / 50).toString()
-                // TODO send value to server
+                rudder = (progress.toDouble() - 50) / 50
+                postJson()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
