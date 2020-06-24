@@ -6,6 +6,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="description">picture of simulator</string>
 
     <string name="type_URL">Type URL here…</string>
     <string name="connect">Connect</string>
@@ -14,4 +15,7 @@
 
     <string name="rudder">Rudder</string>
     <string name="throttle">Throttle</string>
+    <string name="aileron">Aileron</string>
+    <string name="elevator">Elevator</string>
+    <string name="zero">0</string>
 </resources>

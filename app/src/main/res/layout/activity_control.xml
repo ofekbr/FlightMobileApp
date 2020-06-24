@@ -7,6 +7,7 @@
     tools:context="control.ControlActivity">
 
     <ImageView
+        android:contentDescription="@string/description"
         android:id="@+id/screen_shot"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -19,8 +20,8 @@
 
     <io.github.controlwear.virtual.joystick.android.JoystickView
         android:id="@+id/joystickView"
-        android:layout_width="225dp"
-        android:layout_height="216dp"
+        android:layout_width="205dp"
+        android:layout_height="210dp"
         app:JV_backgroundColor="#8a8a75"
         app:JV_borderColor="#252322"
         app:JV_borderWidth="3dp"
@@ -29,10 +30,10 @@
         app:JV_fixedCenter="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.424"
-        app:layout_constraintVertical_bias="0.864" />
+        app:layout_constraintVertical_bias="0.849" />
 
     <SeekBar
         android:id="@+id/rudderSlider"
@@ -56,6 +57,7 @@
         android:progress="0"
         android:rotation="270"
         app:layout_constraintEnd_toEndOf="@+id/textThrottle"
+        app:layout_constraintHorizontal_bias="0.62"
         app:layout_constraintStart_toStartOf="@+id/textThrottle"
         app:layout_constraintTop_toBottomOf="@+id/textThrottle" />
 
@@ -80,10 +82,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.017"
+        app:layout_constraintHorizontal_bias="0.028"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintVertical_bias="0.536" />
 
     <TextView
         android:id="@+id/throttleVal"
@@ -94,7 +96,7 @@
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="number"
-        android:text="0"
+        android:text="@string/zero"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/textThrottle"
@@ -109,7 +111,7 @@
         android:layout_height="33dp"
         android:gravity="center_horizontal"
         android:inputType="number"
-        android:text="0"
+        android:text="@string/zero"
         android:textAlignment="center"
         android:textSize="24sp"
         tools:ignore="MissingConstraints"
@@ -118,17 +120,6 @@
         app:layout_constraintEnd_toEndOf="@+id/textRudder"
         tools:layout_editor_absoluteX="337dp"
         tools:layout_editor_absoluteY="589dp" />
-
-    <Button
-        android:id="@+id/get_img_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="myGetImgFun"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
