@@ -1,7 +1,9 @@
 package control
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Handler
 import android.view.Gravity
 import android.widget.SeekBar
 import android.widget.Toast
@@ -10,6 +12,7 @@ import com.example.myapplication.R
 import com.google.gson.GsonBuilder
 import connect.Api
 import connect.Command
+import connect.ConnectActivity
 import kotlinx.android.synthetic.main.activity_control.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -28,10 +31,12 @@ class ControlActivity : AppCompatActivity() {
     private var elevator : Double = 0.0
     private var rudder : Double = 0.0
     private var throttle : Double = 0.0
+    private var failed : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
 
+        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         url = intent.getStringExtra("EXTRA_TEXT")
         setThrottleSlider()
         setRudderSlider()
@@ -51,7 +56,7 @@ class ControlActivity : AppCompatActivity() {
             //resume sending
             timer = Timer("getImg", false)
             timer.schedule(0, 500) {
-                loop()
+                getImgLoop()
             }
         } else {
             //stop sending
@@ -66,13 +71,15 @@ class ControlActivity : AppCompatActivity() {
 
         api.sendCom(Command(aileron,rudder,elevator,throttle)).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
+                if (failed) {return}
+                failed = true
+                val message = Toast.makeText(applicationContext, "Communication error - please reconnect", Toast.LENGTH_SHORT)
                 message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
                 message.show()
+                Handler().postDelayed({onBackPressed()}, 400)
             }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
         })
     }
 
@@ -90,16 +97,10 @@ class ControlActivity : AppCompatActivity() {
         }
     }
 
-    private fun loop() {
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-        val retrofit = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+    private fun getImgLoop() {
+        val gson = GsonBuilder().setLenient().create()
+        val retrofit = Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(gson)).build()
         val api = retrofit.create(Api::class.java)
-
         api.getImg().enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>
             ) {
@@ -108,14 +109,20 @@ class ControlActivity : AppCompatActivity() {
                 runOnUiThread {
                     screen_shot.setImageBitmap(B)
                 }
+                if (response.code() == 404 || response.code() == 400) {
+                    val message = Toast.makeText(applicationContext, "Communication error - please reconnect", Toast.LENGTH_SHORT)
+                    message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+                    message.show()
+                    Handler().postDelayed({onBackPressed()}, 400)
+                }
             }
-
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
+                if (failed) {return}
+                failed = true
+                val message = Toast.makeText(applicationContext, "Communication error - please reconnect", Toast.LENGTH_SHORT)
                 message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
                 message.show()
-                //TODO flag for error messages
-                //TODO go back to reconnect
+                Handler().postDelayed({onBackPressed()}, 400)
             }
         })
     }
@@ -151,5 +158,10 @@ class ControlActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(this, ConnectActivity::class.java))
+        finish()
     }
 }

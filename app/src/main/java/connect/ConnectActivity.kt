@@ -24,6 +24,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import urlDataBase.Url
 import urlDataBase.UrlDataBase
+import java.lang.Exception
 
 
 class ConnectActivity : AppCompatActivity(), View.OnClickListener {
@@ -73,81 +74,76 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         val editText = findViewById<EditText>(R.id.URLText)
         val connectButton = findViewById<Button>(R.id.connectButton)
         editText.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(
-                s: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 connectButton.isEnabled = s.toString().trim { it <= ' ' }.isNotEmpty()
             }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int, count: Int,
-                after: Int
-            ) {
-                // TODO Auto-generated method stub
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                // TODO Auto-generated method stub - check if valid url
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {}
         })
     }
 
-    fun connect(view: View) {
-        val URL = binding.URLText.text.toString()
-
-        //Updating DB
+    private fun updateDB(url : String) {
         var foundFlag = false
-        for (url in urlList) {
-            if (url.url == URL) {
-                url.id = 0
+        for (dbUrl in urlList) {
+            if (dbUrl.url == url) {
+                dbUrl.id = 0
                 foundFlag = true
             }
         }
         if (!foundFlag) {
             if (urlList.size < 5) {
-                urlList.add(Url(0, URL))
+                urlList.add(Url(0, url))
             } else {
                 urlList.last().id = 0
-                urlList.last().url = URL
+                urlList.last().url = url
             }
         }
         db.clearAllTables()
         db.urlDao.insert(urlList)
+    }
 
-        if (!URL.startsWith("http") && !URL.startsWith("HTTP")) {
-            val message = Toast.makeText(applicationContext, "bad URL", Toast.LENGTH_SHORT)
+
+    fun connect(view: View) {
+        val url = binding.URLText.text.toString()
+        //Updating DB
+        updateDB(url)
+
+        if (!url.startsWith("http") && !url.startsWith("HTTP")) {
+            val message = Toast.makeText(applicationContext, "Bad URL", Toast.LENGTH_SHORT)
             message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
             message.show()
             return
         }
 
         val intent = Intent(this, ControlActivity::class.java)
-        intent.putExtra("EXTRA_TEXT", URL)
+        intent.putExtra("EXTRA_TEXT", url)
 
         //Sending http request to test the server url
-        val gson = GsonBuilder().setLenient().create()
-        val retrofit = Retrofit.Builder().baseUrl(URL).addConverterFactory(GsonConverterFactory.create(gson)).build()
-        val api = retrofit.create(Api::class.java)
-
-        api.sendCom(Command(0.0,0.0,0.0,0.0)).enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                val message = Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT)
-                message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
-                message.show()
-            }
-
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                startActivity(intent)
-            }
-        })
+        try {
+            val gson = GsonBuilder().setLenient().create()
+            val retrofit = Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(gson)).build()
+            val api = retrofit.create(Api::class.java)
+            api.sendCom(Command(0.0,0.0,0.0,0.0)).enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    val message = Toast.makeText(applicationContext, "Failed to connect, check the server and try again", Toast.LENGTH_SHORT)
+                    message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+                    message.show()
+                }
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    startActivity(intent)
+                    finish()
+                }
+            })
+        } catch (e : Exception) {
+            val message = Toast.makeText(applicationContext, "Error during connection, check the url and try again", Toast.LENGTH_SHORT)
+            message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+            message.show()
+        }
     }
 
     override fun onClick(b: View) {
         val button = b as Button
-        val field = findViewById<EditText>(R.id.URLText) as EditText //TODO use binding
+        val field = findViewById<EditText>(R.id.URLText) as EditText
         if (button.text.toString().isNotEmpty()) {
             field.setText(button.text)
         }
