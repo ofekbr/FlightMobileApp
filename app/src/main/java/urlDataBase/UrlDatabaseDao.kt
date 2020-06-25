@@ -10,5 +10,4 @@ interface UrlDatabaseDao {
     fun insert(urlList: List<Url>)
     @Query("SELECT * FROM server_url_table")
     fun getAllUrl(): MutableList<Url>
-
 }
