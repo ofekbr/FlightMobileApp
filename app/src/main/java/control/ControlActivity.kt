@@ -23,6 +23,7 @@ import kotlin.concurrent.schedule
 
 class ControlActivity : AppCompatActivity() {
     private lateinit var url: String
+    private lateinit var timer: Timer
     private var aileron : Double = 0.0
     private var elevator : Double = 0.0
     private var rudder : Double = 0.0
@@ -36,9 +37,25 @@ class ControlActivity : AppCompatActivity() {
         setRudderSlider()
         setJoystick()
 
-        val timer = Timer("getImg", false)
-        timer.schedule(0, 300) {
-            loop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
+    }
+
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            //resume sending
+            timer = Timer("getImg", false)
+            timer.schedule(0, 500) {
+                loop()
+            }
+        } else {
+            //stop sending
+            timer.cancel()
         }
     }
 
