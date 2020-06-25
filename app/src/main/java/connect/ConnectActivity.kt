@@ -16,6 +16,10 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityConnectBinding
 import com.google.gson.GsonBuilder
 import control.ControlActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,8 +41,13 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_connect)
         db = UrlDataBase.getInstance(applicationContext)
         val urlDao = db.urlDao
-        urlList = urlDao.getAllUrl()
-        urlList.sortByDescending { it.id }
+        runBlocking {
+            val job : Job = GlobalScope.launch {
+                urlList = urlDao.getAllUrl()
+                urlList.sortByDescending { it.id }
+            }
+            job.join()
+        }
         setButtons()
         setConnectButton()
     }
@@ -82,7 +91,7 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    private fun updateDB(url : String) {
+    private suspend fun updateDB(url : String) {
         var foundFlag = false
         for (dbUrl in urlList) {
             if (dbUrl.url == url) {
@@ -106,7 +115,7 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
     fun connect(view: View) {
         val url = binding.URLText.text.toString()
         //Updating DB
-        updateDB(url)
+        GlobalScope.launch { updateDB(url) }
 
         if (!url.startsWith("http") && !url.startsWith("HTTP")) {
             val message = Toast.makeText(applicationContext, "Bad URL", Toast.LENGTH_SHORT)
