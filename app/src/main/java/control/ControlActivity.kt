@@ -1,11 +1,11 @@
 package control
 
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.R
 import com.google.gson.GsonBuilder
 import connect.Api
@@ -17,9 +17,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.math.abs
 import java.util.*
 import kotlin.concurrent.schedule
+import kotlin.math.abs
 
 class ControlActivity : AppCompatActivity() {
     private lateinit var url: String
@@ -73,7 +73,7 @@ class ControlActivity : AppCompatActivity() {
         }
     }
 
-    private fun loop(){
+    private fun loop() {
         val gson = GsonBuilder()
             .setLenient()
             .create()
