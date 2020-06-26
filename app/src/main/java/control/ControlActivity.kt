@@ -79,7 +79,14 @@ class ControlActivity : AppCompatActivity() {
                 Handler().postDelayed({onBackPressed()}, 400)
             }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 503) {
+                    val message = Toast.makeText(applicationContext, "Communication error - please reconnect", Toast.LENGTH_SHORT)
+                    message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+                    message.show()
+                    Handler().postDelayed({onBackPressed()}, 400)
+                }
+            }
         })
     }
 
@@ -102,8 +109,7 @@ class ControlActivity : AppCompatActivity() {
         val retrofit = Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(gson)).build()
         val api = retrofit.create(Api::class.java)
         api.getImg().enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>
-            ) {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val I = response.body()?.byteStream()
                 val B = BitmapFactory.decodeStream(I)
                 runOnUiThread {

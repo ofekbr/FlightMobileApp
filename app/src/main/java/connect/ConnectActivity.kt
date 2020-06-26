@@ -139,6 +139,12 @@ class ConnectActivity : AppCompatActivity(), View.OnClickListener {
                     message.show()
                 }
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.code() == 503) {
+                        val message = Toast.makeText(applicationContext, "Failed to connect, check the server and try again", Toast.LENGTH_SHORT)
+                        message.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,0,400)
+                        message.show()
+                        return
+                    }
                     startActivity(intent)
                     finish()
                 }
